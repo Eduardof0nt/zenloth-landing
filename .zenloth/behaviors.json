@@ -1,0 +1,56 @@
+{
+  "behaviors": {
+    "BEH-seven-day-trial-offer": {
+      "flow": "subscription-billing",
+      "promise": "The landing page advertises the standard seven-day free trial in English and Spanish.",
+      "trigger": "ZEN-211 — Eduardo accepted seven-day trials and selective three-environment release on 2026-09-28.",
+      "preconditions": [
+        "Changed landing page is loaded in a browser"
+      ],
+      "expected": [
+        "EN and ES trial promotions say seven days"
+      ],
+      "failure_modes": [
+        "One-month promotional copy remains in either language"
+      ],
+      "invariants": [
+        "No historical migration rewrite",
+        "No changes to prices, renewal cadence or eligibility",
+        "No unrelated development changes in promotion"
+      ],
+      "validation": {
+        "entry": "Changed index.html on an isolated local static server at 390x844",
+        "setup": [
+          "Load the actual landing page with reduced motion",
+          "Use the page language toggle for EN and ES"
+        ],
+        "checks": [
+          {
+            "do": "Read the Spanish hero, pricing intro and both trial badges",
+            "expect": "Trial promotions say seven days; no one-month free offer remains",
+            "evidence": "screenshot"
+          },
+          {
+            "do": "Switch to English and inspect the same promotions",
+            "expect": "Trial promotions say seven days; no one-month free offer remains",
+            "evidence": "screenshot"
+          }
+        ],
+        "adversarial": [
+          "Reload with saved locale",
+          "Inspect both pricing cards and all translated duration strings"
+        ]
+      },
+      "code": [
+        "index.html"
+      ],
+      "tests": [],
+      "status": "documented",
+      "last_validation": {
+        "date": "2026-09-28",
+        "verdict": "blocked",
+        "notes": "Six isolated actual-page Chromium checks passed in EN/ES with no page errors. Board validation publication rejects zenloth-landing as unsupported; registry remains documented. Lovable rollout belongs to Eduardo."
+      }
+    }
+  }
+}

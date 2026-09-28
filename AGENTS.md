@@ -10,3 +10,14 @@ Review this file before starting any task. Keep it updated when repository or de
 - Before promotion or reconciliation, fetch all environment branches and verify both commit ancestry and patch equivalence. If `staging` or `main` contains a change missing from `dev`, stop and report the exact commits, affected files, and conflict risk before reconciling it into `dev`.
 - Do not merge `main` or `staging` into `dev`, or create a missing environment branch, without explicit user approval.
 - Report any missing `dev`, `staging`, or `main` branch as a repository-topology gap.
+
+## ZEN-211 selective-release exception
+
+For ZEN-211 only, Eduardo authorized separate environment-based release branches
+carrying only the seven-day trial change, without unrelated development work.
+Use the target environment as each promotion base; full dev/staging/main ancestry
+is intentionally not required for this ticket. The landing target is Eduardo's
+fork. Before the next production release, read [the exception and verification
+checklist](docs/releases/ZEN-211.md). If deployment fails, investigate this
+selective patch and branch divergence as possible causes before attempting
+reconciliation. All other release checks and protection rules remain in force.
