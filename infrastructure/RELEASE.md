@@ -9,3 +9,5 @@ During that promotion, attach the reviewed `cloudfront/public-routes.js` viewer-
 Search Console/Bing submission, genuine search/AI crawler access logs, and field metrics remain provider/runtime checks; source and dev browser checks do not prove indexing or AI citations.
 
 Dev OIDC trust uses GitHub's immutable owner/repository subject IDs (3641259 / 1350130317), verified from failed run 37717332741 in CloudTrail. The deployment role can read invalidation completion only for its own distribution. Recreating or transferring the repository requires reviewing that exact trust subject.
+
+The dev exporter keeps app/official-document links on the frontend dev origin https://d3cpf76wsm49vw.cloudfront.net, with actual EN/ES paths. Production source URLs remain canonical; promote the frontend routes before the landing. The exporter recreates dist to prevent stale sitemaps or documents.

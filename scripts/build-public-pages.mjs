@@ -36,8 +36,10 @@ for (const file of ['index.html', 'info.html']) {
       if (translated !== undefined) node.childNodes = fragment(translated, node);
       for (const attr of node.attrs) {
         if (['src','data-bg','data-src'].includes(attr.name) && attr.value.startsWith('src/')) attr.value = '/' + attr.value;
-        if (attr.name === 'href' && /^(?:\.\/)?(?:index|info)\.html(?:#|$)/.test(attr.value)) {
-          attr.value = (lang === 'en' ? '/en/' : '/') + attr.value.replace(/^(?:\.\/)?index\.html/, '').replace(/^\.\//, '');
+        if (attr.name === 'href') {
+          const internal = attr.value.match(/^(?:\.\/|\/)?(?:en\/)?(index|info)\.html(#[\s\S]*)?$/);
+          if (internal) attr.value = (lang === 'en' ? '/en/' : '/') + (internal[1] === 'index' ? '' : 'info.html') + (internal[2] || '');
+          else if (['/', '/en/'].includes(attr.value)) attr.value = lang === 'en' ? '/en/' : '/';
         }
       }
       if (/^lang[23]?$/.test(attribute(node, 'id') || '')) {
@@ -46,10 +48,12 @@ for (const file of ['index.html', 'info.html']) {
         attribute(node, 'hreflang', lang === 'es' ? 'en' : 'es');
         node.childNodes = fragment(lang === 'es' ? 'EN' : 'ES', node);
       }
+      if (node.tagName === 'a' && /^https:\/\/zenloth\.tech(?:\/es)?\/?$/.test(attribute(node, 'href') || '')) attribute(node, 'href', `https://zenloth.tech${lang === 'es' ? '/es' : '/'}`);
       if (attribute(node, 'data-legal')) attribute(node, 'href', `https://zenloth.tech${lang === 'es' ? '/es' : ''}/${attribute(node, 'data-legal')}`);
     });
     assert.ok(head);
     head.childNodes = head.childNodes.filter((node) => {
+      if (node.nodeName === '#text' && !node.value.trim()) return false;
       if (node.tagName === 'title') return false;
       if (node.tagName === 'script' && attribute(node, 'type') === 'application/ld+json') return false;
       if (node.tagName === 'link' && ['canonical','alternate'].includes(attribute(node, 'rel'))) return false;
@@ -62,6 +66,10 @@ for (const file of ['index.html', 'info.html']) {
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${title}"><meta name="twitter:description" content="${description}"><meta name="twitter:image" content="${image}">
 <script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'WebSite',name:'Zenloth',url:base + '/',inLanguage:['es','en']})}</script>`;
     head.childNodes.push(...fragment(metadata, head));
+    walk(doc, (node) => {
+      const tail = node.tagName === 'body' && node.childNodes.at(-1);
+      if (tail?.nodeName === '#text' && !tail.value.trim()) tail.value = '\n';
+    });
     const target = lang === 'en' ? 'en/' + file : file;
     if (lang === 'en') mkdirSync('en', { recursive: true });
     writeFileSync(target, serialize(doc) + '\n'); routes.push(base + path);
