@@ -61,9 +61,9 @@
       "status": "validated",
       "last_validation": {
         "date": "2026-10-07",
-        "validation_id": 287,
+        "validation_id": 291,
         "verdict": "validated",
-        "notes": "Actual repository zenloth-landing; board category zenloth-frontend due missing repo enum, explicitly stated in record. 16 local browser cases, 4 artifact tests and unknown-path HTTP 404 passed. Dev publication/live readback follow; production not promoted."
+        "notes": "Actual repository zenloth-landing, explicitly hosted under frontend board category due missing enum. Generator followup passes 16 direct browser cases, four keyboard journeys, eight dev-export HTTP/policy probes and seven tests. Locale-correct internal, app and legal destinations persist across repeat builds; dev export clears stale files and keeps preview destinations in dev. Frontend target availability is required before landing merge; live deployment and production/provider proof remain separate."
       }
     }
   }

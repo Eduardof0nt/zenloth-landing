@@ -23,6 +23,27 @@ try{
   const state={path,scripting,mobile,language,title:await page.title(),headings:await page.locator('h1,h2').allTextContents()};results.push(state);
   await page.screenshot({path:resolve(output,`${results.length}.png`),fullPage:!scripting});await context.close();
  }
+ for (const scripting of [false,true]) for (const width of [390,1440]) {
+  const context=await browser.newContext({javaScriptEnabled:scripting,viewport:{width,height:900},reducedMotion:'reduce'}),page=await context.newPage(),errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  try {
+   await page.goto(origin+'/');
+   const language=page.locator(width===390?'#lang2':'#lang');
+   await language.focus();await page.keyboard.press('Enter');await page.waitForURL(origin+'/en/');
+   await page.locator('h1').waitFor({state:'visible'});
+   await page.locator('a[href="/en/info.html#seguridad"]').focus();await page.keyboard.press('Enter');await page.waitForURL(origin+'/en/info.html#seguridad');
+   assert.equal(await page.locator('html').getAttribute('lang'),'en');
+   assert.equal(await page.locator('.back').getAttribute('href'),'/en/');
+   for(const id of ['privacy','terms','ai-privacy'])assert.equal(await page.locator(`[data-legal="${id}"]`).first().getAttribute('href'),'https://zenloth.tech/'+id);
+   await page.locator('#lang').focus();await page.keyboard.press('Enter');await page.waitForURL(origin+'/info.html');
+   assert.equal(await page.locator('html').getAttribute('lang'),'es');
+   for(const id of ['privacy','terms','ai-privacy'])assert.equal(await page.locator(`[data-legal="${id}"]`).first().getAttribute('href'),'https://zenloth.tech/es/'+id);
+   await page.locator('.back').focus();await page.keyboard.press('Enter');await page.waitForURL(origin+'/');
+   assert.deepEqual(errors,[]);
+   await page.screenshot({path:resolve(output,`navigation-${scripting?'js':'nojs'}-${width}.png`)});
+   results.push({journey:true,scripting,width,keyboardNavigation:true,locales:['en','es'],officialLegalLinks:true,errors});
+  }finally{await context.close()}
+ }
  assert.equal((await fetch(origin+'/not-a-real-page')).status,404);
- writeFileSync(resolve(output,'results.json'),JSON.stringify(results,null,2));console.log('PASS: 16 browser cases plus missing URL 404.');
+ writeFileSync(resolve(output,'results.json'),JSON.stringify(results,null,2));console.log('PASS: 16 browser cases, four keyboard navigation journeys and missing URL 404.');
 }finally{await browser?.close();await new Promise(r=>server.close(r))}
