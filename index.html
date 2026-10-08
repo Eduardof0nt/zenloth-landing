@@ -372,6 +372,43 @@ body:not(.cinema-ready) .rv{opacity:1;transform:none}
 body:not(.cinema-ready) .scroll-cue,body:not(.cinema-ready) .dots{display:none}
 .lang,.menu-btn{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
 [id^="story-"]{scroll-margin-top:80px}
+
+/* ZEN-227: content stays usable when the cinema cannot fit. */
+:root{--nav-offset:84px}
+a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--esm);outline-offset:5px}
+[id]{scroll-margin-top:var(--nav-offset)}
+.nav-tools{display:none;align-items:center;gap:8px}
+.nav-toggle{display:none;border:1px solid var(--bd);border-radius:999px;background:var(--surf);color:#fff;font-family:inherit;font-size:15px;font-weight:600;min-height:44px;padding:8px 16px;cursor:pointer}
+.navlinks a{display:inline-flex;align-items:center;min-height:44px}
+.menu-btn{display:none}
+.sec{overflow:clip} /* contain decorative backgrounds within their section */
+.pcard{min-width:0;padding:clamp(20px,5vw,34px)}
+.pcard .price{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 9px}
+.price .current-price{font:inherit;white-space:nowrap;display:inline-flex;align-items:baseline;gap:2px}
+.pcard .price .pwas{margin-right:0}
+body:not(.cinema-ready) .act{overflow:hidden}
+body:not(.cinema-ready) .l-content{min-height:75svh;padding-top:100px;padding-bottom:60px}
+body:not(.cinema-ready) .cine-phone{transform:none!important}
+body:not(.cinema-ready) .sp,body:not(.cinema-ready) .l-video,body:not(.cinema-ready) .l-trans{display:none!important}
+body:not(.cinema-ready) .scrollcue,body:not(.cinema-ready) .progress{display:none}
+body:not(.cinema-ready) .screens{overflow-x:auto;scroll-snap-type:x mandatory}
+body:not(.cinema-ready) .screen-track{transform:none!important}
+body:not(.cinema-ready) .screen{scroll-snap-align:start;flex-shrink:0}
+body:not(.cinema-ready) .dots{display:flex;gap:8px;pointer-events:auto}
+body:not(.cinema-ready) .dots button{width:44px;height:44px;border-radius:50%;border:1px solid var(--bd);color:#fff;background:var(--surf)}
+body:not(.cinema-ready) .dots button.on{background:var(--esm);color:#06281a}
+body:not(.cinema-ready) .cbub{display:block;opacity:1;transform:none;animation:none}
+body:not(.cinema-ready) .ztyping{display:none}
+@media(max-width:900px){
+  .nav-tools{display:flex}.menu-btn{display:inline-flex}
+  .nav-ready .nav-toggle{display:inline-flex;align-items:center;justify-content:center}
+  .navlinks{display:flex;position:absolute;top:100%;left:12px;right:12px;flex-direction:column;align-items:stretch;gap:4px;padding:16px;background:var(--bg);border:1px solid var(--bd);border-radius:16px;max-height:calc(100svh - var(--nav-offset) - 12px);overflow-y:auto}
+  .navlinks a{padding:8px 14px}
+  .nav-ready .navlinks:not(.open){display:none}
+  body:not(.nav-ready) nav{position:relative;flex-wrap:wrap}
+  body:not(.nav-ready) .navlinks{position:static;max-height:none;width:100%;margin-top:12px}
+}
+
 </style><title>Zenloth — Finanzas con calma</title><meta name="description" content="Conocé Zenloth: organizá tu presupuesto y tus metas financieras con Zenny. Consultá nuestros documentos oficiales y opciones de contacto.">
 <link rel="canonical" href="https://info.zenloth.tech/"><link rel="alternate" hreflang="es" href="https://info.zenloth.tech/"><link rel="alternate" hreflang="en" href="https://info.zenloth.tech/en/"><link rel="alternate" hreflang="x-default" href="https://info.zenloth.tech/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Zenloth"><meta property="og:title" content="Zenloth — Finanzas con calma"><meta property="og:description" content="Conocé Zenloth: organizá tu presupuesto y tus metas financieras con Zenny. Consultá nuestros documentos oficiales y opciones de contacto."><meta property="og:url" content="https://info.zenloth.tech/"><meta property="og:locale" content="es_CR"><meta property="og:image" content="https://info.zenloth.tech/src/story/05_walk_black_clean-lg.jpg">
@@ -384,15 +421,16 @@ body:not(.cinema-ready) .scroll-cue,body:not(.cinema-ready) .dots{display:none}
 <!-- ═══════════════ NAV ═══════════════ -->
 <nav id="nav">
   <a href="#top"><img class="logo" id="navlogo" src="/src/logo/zenloth-lockup-white.png" alt="Zenloth"></a>
-  <div class="navlinks">
-    <a href="#story-3" data-go="3" data-es="Producto" data-en="Product">Producto</a>
+  <div class="nav-tools"><a class="menu-btn" id="lang2" href="/en/" lang="en" hreflang="en">EN</a><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="navlinks" data-es="Menú" data-en="Menu">Menú</button></div>
+  <div class="navlinks" id="navlinks">
+    <a href="#story-2" data-go="2" data-es="Producto" data-en="Product">Producto</a>
     <a href="#features" data-es="Funciones" data-en="Features">Funciones</a>
     <a href="#pricing" data-es="Precios" data-en="Pricing">Precios</a>
-    <a href="#story-4" data-go="4" data-es="Zenny" data-en="Zenny">Zenny</a>
+    <a href="#story-3" data-go="3" data-es="Zenny" data-en="Zenny">Zenny</a>
     <a class="lang" id="lang" href="/en/" lang="en" hreflang="en">EN</a>
     <a href="#pricing" class="btn btn-esm" data-es="Comenzar" data-en="Get started">Comenzar</a>
   </div>
-  <a class="menu-btn" id="lang2" href="/en/" lang="en" hreflang="en">EN</a>
+
 </nav>
 
 <!-- progreso de la historia (puntos laterales) -->
@@ -672,7 +710,7 @@ body:not(.cinema-ready) .scroll-cue,body:not(.cinema-ready) .dots{display:none}
     <div class="prices rv">
       <div class="pcard">
         <div class="pname" data-es="Mensual" data-en="Monthly">Mensual</div>
-        <div class="price">₡6.500<span data-es="/mes" data-en="/mo">/mes</span></div>
+        <div class="price"><strong class="current-price">₡6.500<span data-es="/mes" data-en="/mo">/mes</span></strong></div>
         <div class="anchor" data-es="Menos que un café por semana por claridad total de tu plata." data-en="Less than a coffee a week for total clarity on your money.">Menos que un café por semana por claridad total de tu plata.</div>
         <div class="ptrial"><i class="ti ti-gift"></i><span data-es="Prueba de 7 días" data-en="7-day free trial">Prueba de 7 días</span></div>
         <ul>
@@ -687,7 +725,7 @@ body:not(.cinema-ready) .scroll-cue,body:not(.cinema-ready) .dots{display:none}
       <div class="pcard feat">
         <div class="badge" data-es="Ahorrá 10%" data-en="Save 10%">Ahorrá 10%</div>
         <div class="pname" data-es="Anual" data-en="Annual">Anual</div>
-        <div class="price"><span class="pwas">₡78.000</span>₡70.200<span data-es="/año" data-en="/yr">/año</span></div>
+        <div class="price"><span class="pwas">₡78.000</span><strong class="current-price">₡70.200<span data-es="/año" data-en="/yr">/año</span></strong></div>
         <div class="anchor" data-es="Como un cafecito al mes (₡5.850) — y dos meses te salen gratis al año." data-en="Like one coffee a month (₡5,850) — about two months free per year.">Como un cafecito al mes (₡5.850) — y dos meses te salen gratis al año.</div>
         <div class="ptrial"><i class="ti ti-gift"></i><span data-es="Prueba de 7 días incluida" data-en="7-day trial included">Prueba de 7 días incluida</span></div>
         <ul>
@@ -764,12 +802,42 @@ document.getElementById('zennyImg').src=CONFIG.zennyImg;
 /* ——— nav scrolled ——— */
 const nav=document.getElementById('nav');
 addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passive:true});
+const navToggle=document.querySelector('.nav-toggle');
+const navLinks=document.getElementById('navlinks');
+const narrowNav=matchMedia('(max-width:900px)');
+function closeNav(restore=false){
+  const hadFocus=navLinks.contains(document.activeElement);
+  navLinks.classList.remove('open');navToggle.setAttribute('aria-expanded','false');
+  if(restore&&hadFocus)navToggle.focus();
+}
+navToggle.addEventListener('click',()=>{
+  const open=navToggle.getAttribute('aria-expanded')!=='true';
+  navToggle.setAttribute('aria-expanded',String(open));navLinks.classList.toggle('open',open);
+});
+navLinks.addEventListener('click',e=>{
+  const link=e.target.closest('a');if(!link||!narrowNav.matches)return;
+  closeNav();
+  if(!link.dataset.go&&link.hash){
+    const destination=document.querySelector(link.hash);
+    if(destination){destination.tabIndex=-1;destination.focus({preventScroll:true});}
+  }
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navToggle.getAttribute('aria-expanded')==='true'){e.preventDefault();closeNav(true);navToggle.focus();}});
+document.addEventListener('click',e=>{if(!nav.contains(e.target))closeNav(true);});
+narrowNav.addEventListener('change',()=>{
+  const focused=document.activeElement;
+  if(narrowNav.matches&&navLinks.contains(focused)){closeNav();navToggle.focus();}
+  else{closeNav();if(!narrowNav.matches&&focused===navToggle)navLinks.querySelector('a').focus();}
+});
+document.body.classList.add('nav-ready');
+
 
 /* ——— reveal de secciones marketing ——— */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.14});
 document.querySelectorAll('.rv').forEach(n=>io.observe(n));
 
-const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
+let REDUCE=motionPreference.matches;
 
 /* ════════════════ MOTOR DEL CINEMA ════════════════ */
 const cinema=document.getElementById('cinema');
@@ -793,7 +861,7 @@ acts.forEach(a=>{
 // videos opcionales (Higgsfield): cross-dissolve al cargar.
 // En móvil / datos limitados / reduced-motion NO se descargan — queda la imagen .l-bg de fondo.
 const SAVE=!!(navigator.connection&&navigator.connection.saveData);
-const SKIP_VIDEO=REDUCE||innerWidth<=820||SAVE;
+const SKIP_VIDEO=REDUCE||innerWidth<=820||innerHeight<=600||SAVE;
 const actVideos=acts.map(a=>a.querySelector('.l-video'));
 function loadVideo(v){
   if(!v||v.dataset.loaded||!v.dataset.src) return;
@@ -838,6 +906,7 @@ function setHeight(){AW=actWeights();cinema.style.height=(AW.total*actVH())+'vh'
 
 let target=0,cur=0;
 function measure(){
+  if(!document.body.classList.contains('cinema-ready'))return;
   const total=cinema.offsetHeight-innerHeight;
   const scrolled=Math.min(Math.max(-cinema.getBoundingClientRect().top,0),total);
   const sw=total>0?(scrolled/total)*AW.total:0;      // posición en unidades de peso
@@ -860,6 +929,8 @@ function render(fp){
     a.style.opacity=op.toFixed(3);
     a.style.visibility=op<=.002?'hidden':'visible';
     a.classList.toggle('show',op>.5);
+    a.inert=op<.95;
+
     const t=Math.max(0,Math.min(1,local));
     const bg=a.querySelector('.l-bg');
     if(bg){const z=parseFloat(a.dataset.zoom||'1.18');const s=1.04+t*(z-1.04);bg.style.transform=`scale(${s.toFixed(4)}) translateY(${((t-.5)*-2.4).toFixed(2)}%)`;}
@@ -871,8 +942,8 @@ function render(fp){
       // la copia entra mientras la escena aparece (cross-dissolve) y sale cerca del final
       const inP=Math.min(1,Math.max(0,(local+0.28)/0.26));
       const outP=Math.min(1,Math.max(0,(local-0.74)/0.22));
-      c.style.opacity=(inP*(1-outP)).toFixed(3);
-      c.style.transform=`translateY(${((1-inP)*42-outP*48).toFixed(1)}px)`;
+      c.style.opacity=(a.contains(document.activeElement)?1:inP*(1-outP)).toFixed(3);
+      c.style.transform=a.contains(document.activeElement)?'none':`translateY(${((1-inP)*42-outP*48).toFixed(1)}px)`;
     }
     const ph=a.querySelector('.cine-phone');
     if(ph){const s=0.86+t*0.20;ph.style.transform=`scale(${s.toFixed(3)})`;}
@@ -882,14 +953,24 @@ function render(fp){
   // puntos de progreso
   if(active!==lastActive){lastActive=active;document.querySelectorAll('#progress button').forEach((b,i)=>b.classList.toggle('on',i===active));}
 }
-let lastActive=-1;
-function loop(){cur+=(target-cur)*0.13;if(Math.abs(target-cur)<1e-4)cur=target;render(cur);requestAnimationFrame(loop);}
+let lastActive=-1,animationFrame=null;
+function loop(){if(!document.body.classList.contains('cinema-ready')){animationFrame=null;return;}cur+=(target-cur)*0.13;if(Math.abs(target-cur)<1e-4)cur=target;render(cur);animationFrame=requestAnimationFrame(loop);}
 
 /* puntos laterales + navegación por escena */
-function jumpTo(i){const total=cinema.offsetHeight-innerHeight;const y=cinema.offsetTop+((AW.c[i]+0.5*AW.w[i])/AW.total)*total;scrollTo({top:y,behavior:'smooth'});}
+function jumpTo(i,focus=false,smooth=true){
+  const scene=acts[i];if(!scene)return;
+  if(document.body.classList.contains('cinema-ready')){
+    const total=cinema.offsetHeight-innerHeight;
+    const position=i+0.35;
+    const y=cinema.offsetTop+((AW.c[i]+0.35*AW.w[i])/AW.total)*total;
+    if(focus){target=cur=position;render(cur);}
+    scrollTo({top:y,behavior:smooth&&!focus&&!REDUCE?'smooth':'instant'});
+  }else scene.scrollIntoView({block:'start',behavior:smooth&&!REDUCE?'smooth':'instant'});
+  if(focus){scene.inert=false;const heading=scene.querySelector('h1,h2')||scene;heading.tabIndex=-1;heading.focus({preventScroll:true});}
+}
 const prog=document.getElementById('progress');
 acts.forEach((a,i)=>{const b=document.createElement('button');b.title=a.dataset.name||('Escena '+(i+1));b.onclick=()=>jumpTo(i);prog.appendChild(b);});
-document.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',e=>{if(document.body.classList.contains('cinema-ready')){e.preventDefault();jumpTo(parseInt(el.dataset.go));}}));
+document.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',e=>{if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();closeNav();jumpTo(Number(el.dataset.go),true);}));
 // los puntos de progreso solo se ven mientras estás dentro de la historia
 const progIO=new IntersectionObserver(es=>es.forEach(e=>{prog.style.opacity=e.isIntersecting?'1':'0';prog.style.pointerEvents=e.isIntersecting?'auto':'none';}),{threshold:0});
 progIO.observe(cinema);
@@ -904,7 +985,7 @@ function fpToY(fp){
   return cinema.offsetTop+((AW.c[i]+(fp-i)*AW.w[i])/AW.total)*total;
 }
 function settle(){
-  if(REDUCE||document.body.classList.contains('reduced'))return;
+  if(!document.body.classList.contains('cinema-ready')||acts.some(a=>a.contains(document.activeElement)))return;
   const fp=target;
   if(fp<=0.08||fp>=N-0.12)return;   // en los bordes de la historia no intervenimos
   const i=Math.min(N-1,Math.max(0,Math.floor(fp)));
@@ -942,7 +1023,8 @@ const labels={es:['Inicio','Transacciones','Análisis','Patrones'],en:['Home','T
 let ci=0;
 track.style.transition='none';                 // el scroll mueve el track directamente (sin lag)
 // los puntos son sólo indicadores de progreso (no se hace clic)
-function buildDots(){dotsBox.innerHTML='';slides.forEach((s,i)=>{const b=document.createElement('button');b.className=i===ci?'on':'';b.disabled=true;dotsBox.appendChild(b);});updLabel();}
+function buildDots(){dotsBox.innerHTML='';slides.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.className=i===ci?'on':'';b.disabled=document.body.classList.contains('cinema-ready');b.textContent=String(i+1);b.setAttribute('aria-label',(labels[lang]||labels.es)[i]);b.addEventListener('click',()=>{const scroller=track.parentElement;scroller.scrollTo({left:i*scroller.clientWidth,behavior:REDUCE?'instant':'smooth'});});dotsBox.appendChild(b);});updLabel();}
+track.parentElement.addEventListener('scroll',()=>{if(document.body.classList.contains('cinema-ready'))return;ci=Math.round(track.parentElement.scrollLeft/track.parentElement.clientWidth);[...dotsBox.children].forEach((b,i)=>b.classList.toggle('on',i===ci));updLabel();},{passive:true});
 function updLabel(){const L=labels[lang]||labels.es;slabel.textContent=L[ci]||'';}
 // progreso 0..1 de la escena del teléfono → posición del carrusel; deslizá para avanzar de pantalla
 // el carrusel termina ANTES de que arranque el fundido (FADE_START=1-T_FADE=0.70),
@@ -1000,14 +1082,48 @@ function spores(cv,n){
 })();
 
 /* ════════════════ ARRANQUE ════════════════ */
+function contentHeight(){
+  // Measure natural layout in an isolated, inert scene, independent of current mode.
+  let required=0;
+  acts.forEach(a=>{
+    const shell=document.createElement('div');shell.className=a.className;
+    shell.style.cssText='position:fixed;inset:auto;top:0;left:0;width:'+innerWidth+'px;height:auto;min-height:0;visibility:hidden!important;pointer-events:none';
+    shell.inert=true;shell.setAttribute('aria-hidden','true');
+    const copy=a.querySelector('.l-content').cloneNode(true);
+    copy.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));
+    copy.querySelectorAll('.cbub').forEach(n=>n.style.display='block');
+    copy.style.cssText='position:relative;inset:auto;height:auto;min-height:0;transform:none;opacity:1';
+    shell.append(copy);document.body.append(shell);required=Math.max(required,copy.scrollHeight);shell.remove();
+  });
+  return required;
+}
+let layoutTimer=null;
+function updateLayout(preserve=true){
+  const wasCinema=document.body.classList.contains('cinema-ready');
+  const focused=acts.findIndex(a=>a.contains(document.activeElement));
+  let current=focused>=0?focused:wasCinema?Math.min(N-1,Math.floor(target)):acts.findIndex(a=>a.getBoundingClientRect().bottom>90);
+  if(current<0)current=0;
+  const inside=cinema.getBoundingClientRect().top<innerHeight&&cinema.getBoundingClientRect().bottom>90;
+  REDUCE=motionPreference.matches;document.body.classList.toggle('reduced',REDUCE);
+  const needed=contentHeight();
+  const useCinema=!REDUCE&&innerHeight>600&&needed+(wasCinema?0:32)<=innerHeight;
+  cancelAnimationFrame(animationFrame);animationFrame=null;clearTimeout(snapT);
+  document.body.classList.toggle('cinema-ready',useCinema);
+  actVideos.forEach(v=>{if(!v)return;if(!useCinema)v.pause();else if(v.dataset.loaded)v.play().catch(()=>{});});
+  acts.forEach(a=>{a.inert=false;});
+  track.parentElement.scrollLeft=0;
+  if(useCinema){setHeight();measure();cur=target;render(cur);animationFrame=requestAnimationFrame(loop);}
+  else{cinema.style.height='';acts.forEach(a=>a.classList.remove('show'));}
+  buildDots();
+  if(preserve&&inside&&wasCinema!==useCinema)jumpTo(current,false,false);
+}
 function start(){
-  if(REDUCE){document.body.classList.add('reduced');setLang(lang);return;}
-  document.body.classList.add('cinema-ready');
-  setHeight();measure();cur=target;loop();
+  setLang(lang);updateLayout(false);
   addEventListener('scroll',measure,{passive:true});
-  addEventListener('resize',()=>{setHeight();measure();});
-  document.querySelectorAll('.act .sp').forEach(c=>spores(c,22));
-  setLang(lang);
+  const schedule=()=>{clearTimeout(layoutTimer);layoutTimer=setTimeout(()=>updateLayout(),120);};
+  addEventListener('resize',schedule);motionPreference.addEventListener('change',schedule);
+  document.fonts.ready.then(schedule);
+  if(!REDUCE&&document.body.classList.contains('cinema-ready'))document.querySelectorAll('.act .sp').forEach(c=>spores(c,22));
 }
 try{start();}catch(error){document.body.classList.remove('cinema-ready');console.error(error);}
 

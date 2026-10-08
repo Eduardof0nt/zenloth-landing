@@ -65,6 +65,224 @@
         "verdict": "validated",
         "notes": "Actual repository zenloth-landing, explicitly hosted under frontend board category due missing enum. Generator followup passes 16 direct browser cases, four keyboard journeys, eight dev-export HTTP/policy probes and seven tests. Locale-correct internal, app and legal destinations persist across repeat builds; dev export clears stale files and keeps preview destinations in dev. Frontend target availability is required before landing merge; live deployment and production/provider proof remain separate."
       }
+    },
+    "BEH-landing-reachable-story": {
+      "flow": null,
+      "promise": "Visitors can reach all story content and actions through ordinary scrolling when the viewport cannot accommodate the cinema.",
+      "trigger": "ZEN-227: implementation plan accepted by user on 2026-10-07.",
+      "preconditions": [
+        "Fresh anonymous browser on generated development candidate."
+      ],
+      "expected": [
+        "Complete hero actions and all story content can be reached without clipping or automatic snap-back.",
+        "Layout switches without losing the visible scene or focus; every preview remains reachable."
+      ],
+      "failure_modes": [
+        "Clipped absolute-positioned content.",
+        "Multiple animation loops or scroll snapping in normal-flow mode.",
+        "Phone previews frozen on the first slide."
+      ],
+      "invariants": [
+        "Preserve approved copy, prices, consent and real EN/ES URLs.",
+        "Preserve BEH-public-web-crawlable."
+      ],
+      "validation": {
+        "entry": "Temporary static server for the isolated checkout, / and /en/.",
+        "setup": [
+          "npm ci && npm run build; fresh browser context; record exact viewport, browser and revision."
+        ],
+        "checks": [
+          {
+            "do": "Open / and /en/ at 812x375 and 568x320, dismiss consent, and scroll from hero through every scene.",
+            "expect": "Complete hero actions and all story content can be reached without clipping or automatic snap-back.",
+            "evidence": "screenshot"
+          },
+          {
+            "do": "Rotate between short landscape and portrait, toggle reduced motion, and navigate all four phone previews.",
+            "expect": "Layout switches without losing the visible scene or focus; every preview remains reachable.",
+            "evidence": "screenshot"
+          }
+        ],
+        "adversarial": [
+          "Resize across 900px and 600px repeatedly.",
+          "Use keyboard navigation, reduced motion and first-visit/dismissed consent in both locales."
+        ]
+      },
+      "code": [
+        "index.html",
+        "en/index.html"
+      ],
+      "tests": [
+        "scripts/check-browser.mjs"
+      ],
+      "status": "documented",
+      "last_validation": {
+        "date": "2026-10-07",
+        "validation_id": null,
+        "verdict": "blocked",
+        "notes": "Local browser contracts passed (Chromium/WebKit, EN/ES); evidence is attached to ZEN-227 comment 605. Formal publishing/sealing blocked: board HTTP 400 rejects actual repo zenloth-landing. No repository alias used. Physical device and OS scaling acceptance remain separate."
+      }
+    },
+    "BEH-landing-readable-pricing": {
+      "flow": null,
+      "promise": "Visitors can read complete monthly and annual prices at narrow widths.",
+      "trigger": "ZEN-227: implementation plan accepted by user on 2026-10-07.",
+      "preconditions": [
+        "Fresh anonymous browser on generated development candidate."
+      ],
+      "expected": [
+        "Previous amount, current amount and billing period fit within the card without truncation or page overflow."
+      ],
+      "failure_modes": [
+        "Amount or period clipped by a card."
+      ],
+      "invariants": [
+        "Preserve approved copy, prices, consent and real EN/ES URLs.",
+        "Preserve BEH-public-web-crawlable."
+      ],
+      "validation": {
+        "entry": "Temporary static server for the isolated checkout, / and /en/.",
+        "setup": [
+          "npm ci && npm run build; fresh browser context; record exact viewport, browser and revision."
+        ],
+        "checks": [
+          {
+            "do": "Open / and /en/ at 320 and 375px width and scroll to pricing.",
+            "expect": "Previous amount, current amount and billing period fit within the card without truncation or page overflow.",
+            "evidence": "screenshot"
+          }
+        ],
+        "adversarial": [
+          "Resize across 900px and 600px repeatedly.",
+          "Use keyboard navigation, reduced motion and first-visit/dismissed consent in both locales."
+        ]
+      },
+      "code": [
+        "index.html",
+        "en/index.html"
+      ],
+      "tests": [
+        "scripts/check-browser.mjs"
+      ],
+      "status": "documented",
+      "last_validation": {
+        "date": "2026-10-07",
+        "validation_id": null,
+        "verdict": "blocked",
+        "notes": "Local browser contracts passed (Chromium/WebKit, EN/ES); evidence is attached to ZEN-227 comment 605. Formal publishing/sealing blocked: board HTTP 400 rejects actual repo zenloth-landing. No repository alias used. Physical device and OS scaling acceptance remain separate."
+      }
+    },
+    "BEH-landing-mobile-navigation": {
+      "flow": null,
+      "promise": "Visitors can reach every header destination on narrow screens.",
+      "trigger": "ZEN-227: implementation plan accepted by user on 2026-10-07.",
+      "preconditions": [
+        "Fresh anonymous browser on generated development candidate."
+      ],
+      "expected": [
+        "All destinations are reachable; the panel closes on selection and desktop navigation is restored.",
+        "Closed items leave Tab order; Escape returns focus; new controls have visible focus and 44px targets."
+      ],
+      "failure_modes": [
+        "Navigation disappears at the breakpoint.",
+        "Stale hidden focus or inaccessible panel on short windows."
+      ],
+      "invariants": [
+        "Preserve approved copy, prices, consent and real EN/ES URLs.",
+        "Preserve BEH-public-web-crawlable."
+      ],
+      "validation": {
+        "entry": "Temporary static server for the isolated checkout, / and /en/.",
+        "setup": [
+          "npm ci && npm run build; fresh browser context; record exact viewport, browser and revision."
+        ],
+        "checks": [
+          {
+            "do": "At 320 and 900px open navigation, traverse links, select a destination, then resize to 901px.",
+            "expect": "All destinations are reachable; the panel closes on selection and desktop navigation is restored.",
+            "evidence": "screenshot"
+          },
+          {
+            "do": "Use Tab, Shift+Tab, Escape and outside interaction on the open mobile navigation in both languages.",
+            "expect": "Closed items leave Tab order; Escape returns focus; new controls have visible focus and 44px targets.",
+            "evidence": "screenshot"
+          }
+        ],
+        "adversarial": [
+          "Resize across 900px and 600px repeatedly.",
+          "Use keyboard navigation, reduced motion and first-visit/dismissed consent in both locales."
+        ]
+      },
+      "code": [
+        "index.html",
+        "en/index.html"
+      ],
+      "tests": [
+        "scripts/check-browser.mjs"
+      ],
+      "status": "documented",
+      "last_validation": {
+        "date": "2026-10-07",
+        "validation_id": null,
+        "verdict": "blocked",
+        "notes": "Local browser contracts passed (Chromium/WebKit, EN/ES); evidence is attached to ZEN-227 comment 605. Formal publishing/sealing blocked: board HTTP 400 rejects actual repo zenloth-landing. No repository alias used. Physical device and OS scaling acceptance remain separate."
+      }
+    },
+    "BEH-landing-keyboard-story-navigation": {
+      "flow": null,
+      "promise": "Keyboard visitors can focus and activate every story destination.",
+      "trigger": "ZEN-227: implementation plan accepted by user on 2026-10-07.",
+      "preconditions": [
+        "Fresh anonymous browser on generated development candidate."
+      ],
+      "expected": [
+        "Real links receive visible focus and land on the correct visible scene below the header.",
+        "Story links remain ordinary destinations and no invisible scene action enters Tab traversal."
+      ],
+      "failure_modes": [
+        "Tab skips pointer-only controls.",
+        "Focused story content fades or remains hidden."
+      ],
+      "invariants": [
+        "Preserve approved copy, prices, consent and real EN/ES URLs.",
+        "Preserve BEH-public-web-crawlable."
+      ],
+      "validation": {
+        "entry": "Temporary static server for the isolated checkout, / and /en/.",
+        "setup": [
+          "npm ci && npm run build; fresh browser context; record exact viewport, browser and revision."
+        ],
+        "checks": [
+          {
+            "do": "Tab through the desktop header and hero, then activate Product, Zenny and See the path with Enter.",
+            "expect": "Real links receive visible focus and land on the correct visible scene below the header.",
+            "evidence": "screenshot"
+          },
+          {
+            "do": "Repeat with normal-flow mode and JavaScript disabled.",
+            "expect": "Story links remain ordinary destinations and no invisible scene action enters Tab traversal.",
+            "evidence": "screenshot"
+          }
+        ],
+        "adversarial": [
+          "Resize across 900px and 600px repeatedly.",
+          "Use keyboard navigation, reduced motion and first-visit/dismissed consent in both locales."
+        ]
+      },
+      "code": [
+        "index.html",
+        "en/index.html"
+      ],
+      "tests": [
+        "scripts/check-browser.mjs"
+      ],
+      "status": "documented",
+      "last_validation": {
+        "date": "2026-10-07",
+        "validation_id": null,
+        "verdict": "blocked",
+        "notes": "Local browser contracts passed (Chromium/WebKit, EN/ES); evidence is attached to ZEN-227 comment 605. Formal publishing/sealing blocked: board HTTP 400 rejects actual repo zenloth-landing. No repository alias used. Physical device and OS scaling acceptance remain separate."
+      }
     }
   }
 }
