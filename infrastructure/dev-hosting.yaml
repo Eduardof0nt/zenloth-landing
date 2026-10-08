@@ -10,8 +10,12 @@ Parameters:
     AllowedPattern: '^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$'
   GitHubOwner:
     Type: String
-    Default: Eduardof0nt
+    Default: Zenloth-Apps
     AllowedPattern: '^[A-Za-z0-9_.-]+$'
+  GitHubOwnerId:
+    Type: String
+    Default: "339365234"
+    AllowedPattern: "^[0-9]+$"
 Mappings:
   GitHubEnvironmentNames:
     dev: { Name: dev }
@@ -172,7 +176,7 @@ Resources:
                 # Match GitHub's immutable owner/repository IDs as observed in CloudTrail.
                 # Repository recreation requires an explicit review of this exact subject.
                 token.actions.githubusercontent.com:sub: !Sub
-                  - repo:${GitHubOwner}@3641259/zenloth-landing@1350130317:environment:${GitHubEnvironmentName}
+                  - repo:${GitHubOwner}@${GitHubOwnerId}/zenloth-landing@1350130317:environment:${GitHubEnvironmentName}
                   - GitHubEnvironmentName: !FindInMap [GitHubEnvironmentNames, !Ref Environment, Name]
       Policies:
         - PolicyName: DeployEnvironmentLandingAssets
