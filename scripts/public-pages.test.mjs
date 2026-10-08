@@ -15,3 +15,13 @@ for (const path of ['index.html','info.html','en/index.html','en/info.html']) te
  assert.ok(nodes.some((node)=>node.tagName==='meta'&&attr(node,'property')==='og:image'&&/^https:\/\//.test(attr(node,'content'))));
  assert.doesNotMatch(html,/1 mes gratis|1 month free|first month is free|Alojamiento en Costa Rica|Borrador · contenido de ejemplo/i);
 });
+
+test('production host normalization is scoped and preserves query values', async () => {
+ const {default:vm}=await import('node:vm');const context=vm.createContext({});
+ vm.runInContext(readFileSync('infrastructure/cloudfront/public-routes.js','utf8'),context);
+ const request=(uri,host='preview.example')=>({uri,headers:{host:{value:host}},querystring:{source:{value:'a%20b'}}});
+ assert.equal(context.handler({request:request('/info.html','www.info.zenloth.tech')}).headers.location.value,'https://info.zenloth.tech/info.html?source=a%20b');
+ assert.equal(context.handler({request:request('/en')}).headers.location.value,'/en/?source=a%20b');
+ assert.equal(context.handler({request:request('/en/')}).uri,'/en/index.html');
+ assert.equal(context.handler({request:request('/robots.txt')}).uri,'/robots.txt');
+});
