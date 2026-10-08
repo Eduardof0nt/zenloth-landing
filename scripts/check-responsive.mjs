@@ -57,8 +57,27 @@ try{
   await page.locator('#dots button').last().click();await page.waitForTimeout(600);
   assert.equal(await page.locator('#slabel').textContent(),lang==='en'?'Patterns':'Patrones');
   await capture(page,`${lang}-phone-last-slide`);
-  for(let i=0;i<4;i++){await page.locator('#dots button').nth(i).click();await page.waitForTimeout(500);assert.equal(await page.locator('#dots button').nth(i).getAttribute('class'),'on');}
-  await toggle.click();await page.mouse.click(310,790);await settle(page);assert.equal(await toggle.getAttribute('aria-expanded'),'false');
+  for(let i=0;i<4;i++){
+   await page.locator('#dots button').nth(i).click();await page.waitForTimeout(500);
+   assert.equal(await page.locator('#dots button').nth(i).getAttribute('class'),'on');
+   assert.ok(await page.locator('.screens').evaluate((n,index)=>{const a=n.getBoundingClientRect(),b=n.querySelectorAll('.screen')[index].getBoundingClientRect();return Math.abs(a.left-b.left)<2&&Math.abs(a.width-b.width)<2;},i),'Selected preview content fills and aligns with the phone');
+  }
+  await page.locator('#dots button').last().focus();
+  await page.setViewportSize({width:375,height:812});await settle(page);
+  assert.ok(await page.locator('#dots button').last().evaluate(n=>n===document.activeElement),'Preview focus survives a normal-flow resize');
+  assert.equal(await page.locator('#dots button').last().getAttribute('class'),'on');
+  assert.ok(await page.locator('.screens').evaluate(n=>{const a=n.getBoundingClientRect(),b=n.querySelector('.screen:last-child').getBoundingClientRect();return Math.abs(a.left-b.left)<2&&Math.abs(a.width-b.width)<2;}),'Selected preview remains aligned after resize');
+  await capture(page,`${lang}-preview-focus-resize`);
+  await page.setViewportSize({width:1440,height:1000});await settle(page);
+  assert.equal(await page.evaluate(()=>document.activeElement.closest('.act')?.id),'story-2','Preview focus moves to its scene in cinema');
+  assert.equal(await page.locator('#slabel').textContent(),lang==='en'?'Patterns':'Patrones','Selected preview survives the mode change');
+  await capture(page,`${lang}-preview-focus-cinema`);
+  await page.setViewportSize({width:320,height:812});await settle(page);
+  await toggle.click();
+  const outside={x:318,y:100};
+  assert.ok(await page.evaluate(({x,y})=>!document.elementFromPoint(x,y)?.closest('nav'),outside),'Click point is outside the disclosure');
+  await page.mouse.click(outside.x,outside.y);await settle(page);
+  assert.equal(await toggle.getAttribute('aria-expanded'),'false','An actual outside click closes the menu');
   for(const width of [899,900,901,900,901]){
    await page.setViewportSize({width,height:1000});await settle(page);
    assert.equal(await toggle.isVisible(),width<=900);
@@ -87,9 +106,9 @@ try{
    assert.ok(await visibleContent(page,'#'+id+' h2'));
    await capture(page,`${lang}-keyboard-${id}`);
   }
-  await page.emulateMedia({reducedMotion:'reduce'});await settle(page);assert.equal(await page.locator('body').evaluate(n=>n.classList.contains('cinema-ready')),false);
+  await page.emulateMedia({reducedMotion:'reduce'});await settle(page);assert.equal(await page.evaluate(()=>document.activeElement.closest('.act')?.id),'story-1','Focus survives entering reduced motion');assert.equal(await page.locator('body').evaluate(n=>n.classList.contains('cinema-ready')),false);
   await page.locator('[data-go="3"]').first().focus();await page.keyboard.press('Enter');await settle(page);assert.ok(await visibleContent(page,'#story-3 h2'));await capture(page,`${lang}-reduced-motion`);
-  await page.emulateMedia({reducedMotion:'no-preference'});await settle(page);assert.equal(await page.locator('body').evaluate(n=>n.classList.contains('cinema-ready')),true);
+  await page.emulateMedia({reducedMotion:'no-preference'});await settle(page);assert.equal(await page.evaluate(()=>document.activeElement.closest('.act')?.id),'story-3','Focus survives returning to cinema');await capture(page,`${lang}-motion-focus-preserved`);assert.equal(await page.locator('body').evaluate(n=>n.classList.contains('cinema-ready')),true);
   await page.setViewportSize({width:812,height:375});await settle(page);await page.setViewportSize({width:375,height:812});await settle(page);await capture(page,`${lang}-rotation`);
   console.log(`Checked ${lang} responsive and keyboard states.`);await context.close();
  }
