@@ -57,11 +57,16 @@ try{
   await page.locator('#dots button').last().click();await page.waitForTimeout(600);
   assert.equal(await page.locator('#slabel').textContent(),lang==='en'?'Patterns':'Patrones');
   await capture(page,`${lang}-phone-last-slide`);
-  for(let i=0;i<4;i++){await page.locator('#dots button').nth(i).click();await page.waitForTimeout(500);assert.equal(await page.locator('#dots button').nth(i).getAttribute('class'),'on');}
+  for(let i=0;i<4;i++){
+   await page.locator('#dots button').nth(i).click();await page.waitForTimeout(500);
+   assert.equal(await page.locator('#dots button').nth(i).getAttribute('class'),'on');
+   assert.ok(await page.locator('.screens').evaluate((n,index)=>{const a=n.getBoundingClientRect(),b=n.querySelectorAll('.screen')[index].getBoundingClientRect();return Math.abs(a.left-b.left)<2&&Math.abs(a.width-b.width)<2;},i),'Selected preview content fills and aligns with the phone');
+  }
   await page.locator('#dots button').last().focus();
   await page.setViewportSize({width:375,height:812});await settle(page);
   assert.ok(await page.locator('#dots button').last().evaluate(n=>n===document.activeElement),'Preview focus survives a normal-flow resize');
   assert.equal(await page.locator('#dots button').last().getAttribute('class'),'on');
+  assert.ok(await page.locator('.screens').evaluate(n=>{const a=n.getBoundingClientRect(),b=n.querySelector('.screen:last-child').getBoundingClientRect();return Math.abs(a.left-b.left)<2&&Math.abs(a.width-b.width)<2;}),'Selected preview remains aligned after resize');
   await capture(page,`${lang}-preview-focus-resize`);
   await page.setViewportSize({width:1440,height:1000});await settle(page);
   assert.equal(await page.evaluate(()=>document.activeElement.closest('.act')?.id),'story-2','Preview focus moves to its scene in cinema');
