@@ -58,7 +58,21 @@ try{
   assert.equal(await page.locator('#slabel').textContent(),lang==='en'?'Patterns':'Patrones');
   await capture(page,`${lang}-phone-last-slide`);
   for(let i=0;i<4;i++){await page.locator('#dots button').nth(i).click();await page.waitForTimeout(500);assert.equal(await page.locator('#dots button').nth(i).getAttribute('class'),'on');}
-  await toggle.click();await page.mouse.click(310,790);await settle(page);assert.equal(await toggle.getAttribute('aria-expanded'),'false');
+  await page.locator('#dots button').last().focus();
+  await page.setViewportSize({width:375,height:812});await settle(page);
+  assert.ok(await page.locator('#dots button').last().evaluate(n=>n===document.activeElement),'Preview focus survives a normal-flow resize');
+  assert.equal(await page.locator('#dots button').last().getAttribute('class'),'on');
+  await capture(page,`${lang}-preview-focus-resize`);
+  await page.setViewportSize({width:1440,height:1000});await settle(page);
+  assert.equal(await page.evaluate(()=>document.activeElement.closest('.act')?.id),'story-2','Preview focus moves to its scene in cinema');
+  assert.equal(await page.locator('#slabel').textContent(),lang==='en'?'Patterns':'Patrones','Selected preview survives the mode change');
+  await capture(page,`${lang}-preview-focus-cinema`);
+  await page.setViewportSize({width:320,height:812});await settle(page);
+  await toggle.click();
+  const outside={x:318,y:100};
+  assert.ok(await page.evaluate(({x,y})=>!document.elementFromPoint(x,y)?.closest('nav'),outside),'Click point is outside the disclosure');
+  await page.mouse.click(outside.x,outside.y);await settle(page);
+  assert.equal(await toggle.getAttribute('aria-expanded'),'false','An actual outside click closes the menu');
   for(const width of [899,900,901,900,901]){
    await page.setViewportSize({width,height:1000});await settle(page);
    assert.equal(await toggle.isVisible(),width<=900);

@@ -823,7 +823,7 @@ navLinks.addEventListener('click',e=>{
   }
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navToggle.getAttribute('aria-expanded')==='true'){e.preventDefault();closeNav(true);navToggle.focus();}});
-document.addEventListener('click',e=>{if(!nav.contains(e.target))closeNav(true);});
+document.addEventListener('pointerdown',e=>{if(!nav.contains(e.target))closeNav(true);});
 narrowNav.addEventListener('change',()=>{
   const focused=document.activeElement;
   if(narrowNav.matches&&navLinks.contains(focused)){closeNav();navToggle.focus();}
@@ -957,12 +957,12 @@ let lastActive=-1,animationFrame=null;
 function loop(){if(!document.body.classList.contains('cinema-ready')){animationFrame=null;return;}cur+=(target-cur)*0.13;if(Math.abs(target-cur)<1e-4)cur=target;render(cur);animationFrame=requestAnimationFrame(loop);}
 
 /* puntos laterales + navegación por escena */
-function jumpTo(i,focus=false,smooth=true){
+function jumpTo(i,focus=false,smooth=true,phase=0.35){
   const scene=acts[i];if(!scene)return;
   if(document.body.classList.contains('cinema-ready')){
     const total=cinema.offsetHeight-innerHeight;
-    const position=i+0.35;
-    const y=cinema.offsetTop+((AW.c[i]+0.35*AW.w[i])/AW.total)*total;
+    const position=i+phase;
+    const y=cinema.offsetTop+((AW.c[i]+phase*AW.w[i])/AW.total)*total;
     if(focus){target=cur=position;render(cur);}
     scrollTo({top:y,behavior:smooth&&!focus&&!REDUCE?'smooth':'instant'});
   }else scene.scrollIntoView({block:'start',behavior:smooth&&!REDUCE?'smooth':'instant'});
@@ -1022,8 +1022,19 @@ const slabel=document.getElementById('slabel');
 const labels={es:['Inicio','Transacciones','Análisis','Patrones'],en:['Home','Transactions','Insights','Patterns']};
 let ci=0;
 track.style.transition='none';                 // el scroll mueve el track directamente (sin lag)
-// los puntos son sólo indicadores de progreso (no se hace clic)
-function buildDots(){dotsBox.innerHTML='';slides.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.className=i===ci?'on':'';b.disabled=document.body.classList.contains('cinema-ready');b.textContent=String(i+1);b.setAttribute('aria-label',(labels[lang]||labels.es)[i]);b.addEventListener('click',()=>{const scroller=track.parentElement;scroller.scrollTo({left:i*scroller.clientWidth,behavior:REDUCE?'instant':'smooth'});});dotsBox.appendChild(b);});updLabel();}
+// Botones en flujo normal; indicadores deshabilitados en el cinema.
+function buildDots(){
+  slides.forEach((s,i)=>{
+    let b=dotsBox.children[i];
+    if(!b){
+      b=document.createElement('button');b.type='button';
+      b.addEventListener('click',()=>{const scroller=track.parentElement;scroller.scrollTo({left:i*scroller.clientWidth,behavior:REDUCE?'instant':'smooth'});});
+      dotsBox.appendChild(b);
+    }
+    b.className=i===ci?'on':'';b.disabled=document.body.classList.contains('cinema-ready');
+    b.textContent=String(i+1);b.setAttribute('aria-label',(labels[lang]||labels.es)[i]);
+  });updLabel();
+}
 track.parentElement.addEventListener('scroll',()=>{if(document.body.classList.contains('cinema-ready'))return;ci=Math.round(track.parentElement.scrollLeft/track.parentElement.clientWidth);[...dotsBox.children].forEach((b,i)=>b.classList.toggle('on',i===ci));updLabel();},{passive:true});
 function updLabel(){const L=labels[lang]||labels.es;slabel.textContent=L[ci]||'';}
 // progreso 0..1 de la escena del teléfono → posición del carrusel; deslizá para avanzar de pantalla
@@ -1112,18 +1123,24 @@ function updateLayout(preserve=true){
   document.body.classList.toggle('cinema-ready',useCinema);
   actVideos.forEach(v=>{if(!v)return;if(!useCinema)v.pause();else if(v.dataset.loaded)v.play().catch(()=>{});});
   acts.forEach(a=>{a.inert=false;});
-  track.parentElement.scrollLeft=0;
+  track.parentElement.scrollLeft=useCinema?0:ci*track.parentElement.clientWidth;
   if(useCinema){
     setHeight();
     // Align the new timeline before inert/visibility updates can blur the focused scene.
-    if(preserve&&inside&&!wasCinema)jumpTo(current,false,false);
+    if(preserve&&inside&&!wasCinema){
+      const phase=acts[current].classList.contains('act-phone')?CAR_FROM+(ci/(slides.length-1))*(CAR_TO-CAR_FROM):0.35;
+      jumpTo(current,false,false,phase);
+    }
     measure();cur=target;render(cur);animationFrame=requestAnimationFrame(loop);
   }
   else{cinema.style.height='';acts.forEach(a=>a.classList.remove('show'));}
   buildDots();
   if(preserve&&inside&&wasCinema!==useCinema){
     if(!useCinema)jumpTo(current,false,false);
-    if(focused>=0&&focusTarget.isConnected){acts[focused].inert=false;focusTarget.focus({preventScroll:true});}
+    if(focused>=0&&focusTarget.isConnected){
+      const destination=focusTarget.disabled?(acts[focused].querySelector('h1,h2')||acts[focused]):focusTarget;
+      acts[focused].inert=false;if(destination!==focusTarget)destination.tabIndex=-1;destination.focus({preventScroll:true});
+    }
   }
 }
 function start(){

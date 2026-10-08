@@ -113,14 +113,15 @@
         "en/index.html"
       ],
       "tests": [
-        "scripts/check-browser.mjs"
+        "scripts/check-browser.mjs",
+        "scripts/check-responsive.mjs"
       ],
       "status": "documented",
       "last_validation": {
         "date": "2026-10-08",
         "validation_id": null,
         "verdict": "blocked",
-        "notes": "Local Chromium/WebKit 34-state contracts passed, including focus preservation in both motion directions; evidence on ZEN-227 comments 605 and 611. Formal publication/sealing remains blocked by board HTTP 400 rejecting zenloth-landing. No repo alias or invented ID."
+        "notes": "Local Chromium/WebKit 38-state contracts passed, including motion/preview focus, slide selection and outside pointer dismissal; evidence on ZEN-227 comments 605, 611 and 613. Formal publication/sealing remains blocked by board HTTP 400 rejecting zenloth-landing. No repo alias or invented ID."
       }
     },
     "BEH-landing-readable-pricing": {
@@ -162,7 +163,8 @@
         "en/index.html"
       ],
       "tests": [
-        "scripts/check-browser.mjs"
+        "scripts/check-browser.mjs",
+        "scripts/check-responsive.mjs"
       ],
       "status": "documented",
       "last_validation": {
@@ -218,7 +220,8 @@
         "en/index.html"
       ],
       "tests": [
-        "scripts/check-browser.mjs"
+        "scripts/check-browser.mjs",
+        "scripts/check-responsive.mjs"
       ],
       "status": "documented",
       "last_validation": {
@@ -274,14 +277,15 @@
         "en/index.html"
       ],
       "tests": [
-        "scripts/check-browser.mjs"
+        "scripts/check-browser.mjs",
+        "scripts/check-responsive.mjs"
       ],
       "status": "documented",
       "last_validation": {
         "date": "2026-10-08",
         "validation_id": null,
         "verdict": "blocked",
-        "notes": "Local Chromium/WebKit 34-state contracts passed, including focus preservation in both motion directions; evidence on ZEN-227 comments 605 and 611. Formal publication/sealing remains blocked by board HTTP 400 rejecting zenloth-landing. No repo alias or invented ID."
+        "notes": "Local Chromium/WebKit 38-state contracts passed, including motion/preview focus, slide selection and outside pointer dismissal; evidence on ZEN-227 comments 605, 611 and 613. Formal publication/sealing remains blocked by board HTTP 400 rejecting zenloth-landing. No repo alias or invented ID."
       }
     }
   }
