@@ -16,7 +16,7 @@ function fragment(html, parent) {
   return nodes;
 }
 for (const file of ['index.html', 'info.html']) {
-  const source = readFileSync(file, 'utf8').replaceAll("'src/", "'/src/");
+  const source = readFileSync(file, 'utf8').trimEnd().replaceAll("'src/", "'/src/");
   for (const lang of ['es', 'en']) {
     const doc = parse(source); let head;
     const path = `${lang === 'en' ? '/en/' : '/'}${file === 'index.html' ? '' : file}`;
@@ -50,6 +50,7 @@ for (const file of ['index.html', 'info.html']) {
     });
     assert.ok(head);
     head.childNodes = head.childNodes.filter((node) => {
+      if (node.nodeName === '#text' && !node.value.trim()) return false;
       if (node.tagName === 'title') return false;
       if (node.tagName === 'script' && attribute(node, 'type') === 'application/ld+json') return false;
       if (node.tagName === 'link' && ['canonical','alternate'].includes(attribute(node, 'rel'))) return false;

@@ -26,7 +26,7 @@ jobs:
       - run: npm audit
       - run: npm run build && npm test
       - run: npx playwright install --with-deps chromium
-      - run: node scripts/check-browser.mjs
+      - run: node scripts/check-browser.mjs && node scripts/check-responsive.mjs
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     needs: validate
