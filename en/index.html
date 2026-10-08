@@ -1100,7 +1100,8 @@ function contentHeight(){
 let layoutTimer=null;
 function updateLayout(preserve=true){
   const wasCinema=document.body.classList.contains('cinema-ready');
-  const focused=acts.findIndex(a=>a.contains(document.activeElement));
+  const focusTarget=document.activeElement;
+  const focused=acts.findIndex(a=>a.contains(focusTarget));
   let current=focused>=0?focused:wasCinema?Math.min(N-1,Math.floor(target)):acts.findIndex(a=>a.getBoundingClientRect().bottom>90);
   if(current<0)current=0;
   const inside=cinema.getBoundingClientRect().top<innerHeight&&cinema.getBoundingClientRect().bottom>90;
@@ -1112,10 +1113,18 @@ function updateLayout(preserve=true){
   actVideos.forEach(v=>{if(!v)return;if(!useCinema)v.pause();else if(v.dataset.loaded)v.play().catch(()=>{});});
   acts.forEach(a=>{a.inert=false;});
   track.parentElement.scrollLeft=0;
-  if(useCinema){setHeight();measure();cur=target;render(cur);animationFrame=requestAnimationFrame(loop);}
+  if(useCinema){
+    setHeight();
+    // Align the new timeline before inert/visibility updates can blur the focused scene.
+    if(preserve&&inside&&!wasCinema)jumpTo(current,false,false);
+    measure();cur=target;render(cur);animationFrame=requestAnimationFrame(loop);
+  }
   else{cinema.style.height='';acts.forEach(a=>a.classList.remove('show'));}
   buildDots();
-  if(preserve&&inside&&wasCinema!==useCinema)jumpTo(current,false,false);
+  if(preserve&&inside&&wasCinema!==useCinema){
+    if(!useCinema)jumpTo(current,false,false);
+    if(focused>=0&&focusTarget.isConnected){acts[focused].inert=false;focusTarget.focus({preventScroll:true});}
+  }
 }
 function start(){
   setLang(lang);updateLayout(false);

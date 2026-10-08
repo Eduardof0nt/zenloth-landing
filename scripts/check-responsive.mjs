@@ -87,9 +87,9 @@ try{
    assert.ok(await visibleContent(page,'#'+id+' h2'));
    await capture(page,`${lang}-keyboard-${id}`);
   }
-  await page.emulateMedia({reducedMotion:'reduce'});await settle(page);assert.equal(await page.locator('body').evaluate(n=>n.classList.contains('cinema-ready')),false);
+  await page.emulateMedia({reducedMotion:'reduce'});await settle(page);assert.equal(await page.evaluate(()=>document.activeElement.closest('.act')?.id),'story-1','Focus survives entering reduced motion');assert.equal(await page.locator('body').evaluate(n=>n.classList.contains('cinema-ready')),false);
   await page.locator('[data-go="3"]').first().focus();await page.keyboard.press('Enter');await settle(page);assert.ok(await visibleContent(page,'#story-3 h2'));await capture(page,`${lang}-reduced-motion`);
-  await page.emulateMedia({reducedMotion:'no-preference'});await settle(page);assert.equal(await page.locator('body').evaluate(n=>n.classList.contains('cinema-ready')),true);
+  await page.emulateMedia({reducedMotion:'no-preference'});await settle(page);assert.equal(await page.evaluate(()=>document.activeElement.closest('.act')?.id),'story-3','Focus survives returning to cinema');await capture(page,`${lang}-motion-focus-preserved`);assert.equal(await page.locator('body').evaluate(n=>n.classList.contains('cinema-ready')),true);
   await page.setViewportSize({width:812,height:375});await settle(page);await page.setViewportSize({width:375,height:812});await settle(page);await capture(page,`${lang}-rotation`);
   console.log(`Checked ${lang} responsive and keyboard states.`);await context.close();
  }
