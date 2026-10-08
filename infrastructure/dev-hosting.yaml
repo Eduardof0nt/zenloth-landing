@@ -169,8 +169,10 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                # Match GitHub's immutable owner/repository IDs as observed in CloudTrail.
+                # Repository recreation requires an explicit review of this exact subject.
                 token.actions.githubusercontent.com:sub: !Sub
-                  - repo:${GitHubOwner}/zenloth-landing:environment:${GitHubEnvironmentName}
+                  - repo:${GitHubOwner}@3641259/zenloth-landing@1350130317:environment:${GitHubEnvironmentName}
                   - GitHubEnvironmentName: !FindInMap [GitHubEnvironmentNames, !Ref Environment, Name]
       Policies:
         - PolicyName: DeployEnvironmentLandingAssets
@@ -187,7 +189,7 @@ Resources:
                 Resource: !Sub ${WebsiteBucket.Arn}/*
               - Sid: InvalidateOnlyThisDistribution
                 Effect: Allow
-                Action: [cloudfront:CreateInvalidation, cloudfront:GetDistribution]
+                Action: [cloudfront:CreateInvalidation, cloudfront:GetDistribution, cloudfront:GetInvalidation]
                 Resource: !Sub arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Distribution}
       Tags:
         - Key: Application

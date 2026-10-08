@@ -7,3 +7,5 @@ Production promotion is a separate authorized action. The current live publisher
 During that promotion, attach the reviewed `cloudfront/public-routes.js` viewer-request function to the existing landing distribution, preserving its security policies and unrelated associations. It redirects the www alias and duplicate index URLs to their canonical equivalents and preserves query values. Verify all four public URLs, robots/sitemap content types, unknown-path 404s, no-JavaScript visibility, and the exact published revision on both hostnames. No production distribution, DNS, bucket policy or publisher was changed by ZEN-228 dev work.
 
 Search Console/Bing submission, genuine search/AI crawler access logs, and field metrics remain provider/runtime checks; source and dev browser checks do not prove indexing or AI citations.
+
+Dev OIDC trust uses GitHub's immutable owner/repository subject IDs (3641259 / 1350130317), verified from failed run 37717332741 in CloudTrail. The deployment role can read invalidation completion only for its own distribution. Recreating or transferring the repository requires reviewing that exact trust subject.
