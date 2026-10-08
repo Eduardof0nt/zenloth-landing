@@ -1,0 +1,70 @@
+{
+  "behaviors": {
+    "BEH-public-web-crawlable": {
+      "flow": null,
+      "promise": "Visitors and crawlers can read and navigate the intended public pages without client JavaScript.",
+      "trigger": "ZEN-228: Eduardo approved fixing all audit findings on 2026-10-07.",
+      "preconditions": [
+        "Candidate built from feature/ZEN-228; fresh unauthenticated browser."
+      ],
+      "expected": [
+        "Public content is visible with meaningful headings and ordinary navigation links.",
+        "Crawler policies, content types, canonical URLs and real error statuses match the environment; revision readback identifies the candidate.",
+        "Both languages are real readable URLs with equivalent approved content and consistent metadata."
+      ],
+      "failure_modes": [
+        "Hidden no-JS content or navigation without href.",
+        "Crawling private pages or publishing misleading metadata.",
+        "HTML app shells served as crawler files or unknown assets."
+      ],
+      "invariants": [
+        "No authorization, consent, CSP or private-data boundary weakened.",
+        "Production and provider indexing proof are not inferred from dev."
+      ],
+      "validation": {
+        "entry": "Candidate static export using isolated loopback verification or authorized dev origin.",
+        "setup": [
+          "Use only generated candidate assets and fresh browser contexts."
+        ],
+        "checks": [
+          {
+            "do": "Open the built candidate in a fresh browser, with and without JavaScript.",
+            "expect": "Public content is visible with meaningful headings and ordinary navigation links.",
+            "evidence": "screenshot"
+          },
+          {
+            "do": "Fetch robots, sitemap, known direct routes and an unknown path.",
+            "expect": "Crawler policies, content types, canonical URLs and real error statuses match the environment; revision readback identifies the candidate.",
+            "evidence": "payload"
+          },
+          {
+            "do": "Open both public languages, navigate legal/information links and compare metadata before/after hydration.",
+            "expect": "Both languages are real readable URLs with equivalent approved content and consistent metadata.",
+            "evidence": "screenshot"
+          }
+        ],
+        "adversarial": [
+          "Disable JavaScript and request routes directly.",
+          "Request an unknown URL and crawler files.",
+          "Switch locale and use keyboard navigation."
+        ]
+      },
+      "code": [
+        "index.html",
+        "info.html",
+        "en/",
+        "scripts/"
+      ],
+      "tests": [
+        "scripts/"
+      ],
+      "status": "validated",
+      "last_validation": {
+        "date": "2026-10-07",
+        "validation_id": 287,
+        "verdict": "validated",
+        "notes": "Actual repository zenloth-landing; board category zenloth-frontend due missing repo enum, explicitly stated in record. 16 local browser cases, 4 artifact tests and unknown-path HTTP 404 passed. Dev publication/live readback follow; production not promoted."
+      }
+    }
+  }
+}
